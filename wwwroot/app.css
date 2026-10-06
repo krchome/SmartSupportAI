@@ -1,0 +1,325 @@
+body {
+    margin: 0;
+    background: #edf2f7;
+    color: #16243b;
+    font-family: 'Segoe UI',system-ui,sans-serif
+}
+
+* {
+    box-sizing: border-box
+}
+
+.workspace {
+    max-width: 1440px;
+    margin: auto;
+    padding: 38px 44px
+}
+
+.masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    gap: 20px
+}
+
+h1 {
+    font-size: 38px;
+    letter-spacing: -1px;
+    font-weight: 700;
+    margin: 3px 0 8px
+}
+
+h2 {
+    font-size: 21px;
+    margin: 0 0 12px;
+    font-weight: 650
+}
+
+h3 {
+    font-size: 18px
+}
+
+p {
+    line-height: 1.65;
+    margin: 0 0 12px
+}
+
+.eyebrow {
+    font-size: 12px;
+    letter-spacing: 1.6px;
+    color: #176d79;
+    font-weight: 700
+}
+
+button {
+    border: 0;
+    border-radius: 8px;
+    padding: 12px 20px;
+    background: #126b79;
+    color: white;
+    font-weight: 600;
+    cursor: pointer
+}
+
+    button:hover:not(:disabled) {
+        background: #0e5260
+    }
+
+    button:disabled {
+        opacity: .5;
+        cursor: default
+    }
+
+    button.secondary {
+        background: white;
+        color: #16243b;
+        border: 1px solid #c4d1df
+    }
+
+    button:focus-visible, textarea:focus-visible {
+        outline: 3px solid #f5ad42;
+        outline-offset: 3px
+    }
+
+.columns {
+    display: grid;
+    grid-template-columns: minmax(0,2.2fr) minmax(280px,1fr);
+    gap: 28px
+}
+
+.chat {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #d9e2ec;
+    overflow: hidden
+}
+
+.chat-heading {
+    padding: 20px 26px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5eaf0
+}
+
+    .chat-heading h2 {
+        margin: 0
+    }
+
+    .chat-heading span {
+        color: #62718a;
+        font-size: 13px
+    }
+
+.messages {
+    min-height: 340px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 24px 26px
+}
+
+.welcome {
+    padding: 24px 0
+}
+
+    .welcome h2 {
+        font-size: 30px
+    }
+
+    .welcome p {
+        color: #62718a
+    }
+
+    .welcome button {
+        display: block;
+        margin-top: 14px;
+        color: #145762;
+        background: #e9f5f5;
+        text-align: left
+    }
+
+.message {
+    margin-bottom: 20px;
+    padding: 16px 18px;
+    border-radius: 10px;
+    overflow-wrap: anywhere
+}
+
+    .message strong {
+        font-size: 11px;
+        letter-spacing: 1px
+    }
+
+    .message p {
+        white-space: pre-wrap;
+        margin: 7px 0 0
+    }
+
+.user {
+    background: #edf2f7;
+    margin-left: 50px
+}
+
+.assistant {
+    background: #eaf6f4;
+    margin-right: 30px
+}
+
+.composer {
+    padding: 20px 26px;
+    border-top: 1px solid #e5eaf0
+}
+
+    .composer label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 7px
+    }
+
+textarea {
+    font: inherit;
+    width: 100%;
+    resize: vertical;
+    padding: 12px;
+    border: 1px solid #b6c7d8;
+    border-radius: 8px
+}
+
+.composer-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 12px
+}
+
+    .composer-footer span {
+        font-size: 12px;
+        color: #62718a
+    }
+
+    .composer-footer button {
+        flex-shrink: 0
+    }
+
+.evidence section {
+    background: white;
+    border: 1px solid #d9e2ec;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px
+}
+
+.muted, .empty {
+    color: #62718a;
+    font-size: 14px
+}
+
+.empty {
+    padding-top: 12px
+}
+
+.tool-call {
+    border-left: 3px solid #159c99;
+    padding: 10px 12px;
+    margin-top: 12px;
+    background: #f4f9fa
+}
+
+    .tool-call code {
+        display: block;
+        color: #145762;
+        font-size: 14px;
+        overflow-wrap: anywhere
+    }
+
+    .tool-call span, .ticket span {
+        display: block;
+        color: #62718a;
+        font-size: 13px;
+        margin-top: 4px
+    }
+
+.ticket {
+    padding: 12px 0;
+    border-top: 1px solid #e5eaf0
+}
+
+    .ticket strong {
+        color: #126b79
+    }
+
+    .ticket p {
+        font-size: 14px;
+        margin-top: 8px;
+        overflow-wrap: anywhere
+    }
+
+.boundary p {
+    font-size: 13px;
+    color: #62718a
+}
+
+.notice {
+    background: #fff2d6;
+    padding: 14px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px
+}
+
+.error {
+    color: #922838;
+    background: #fff0f1;
+    padding: 12px 26px
+}
+
+.thinking {
+    color: #126b79
+}
+
+@media(max-width:850px) {
+    .workspace {
+        padding: 22px 18px
+    }
+
+    .columns {
+        grid-template-columns: 1fr
+    }
+
+    .masthead {
+        align-items: flex-start
+    }
+
+    h1 {
+        font-size: 30px
+    }
+
+    .composer-footer {
+        flex-wrap: wrap
+    }
+}
+
+@media(max-width:600px) {
+    .masthead {
+        flex-direction: column
+    }
+
+    .chat-heading {
+        flex-wrap: wrap;
+        gap: 8px
+    }
+
+    .welcome button {
+        max-width: 100%;
+        white-space: normal
+    }
+
+    .user {
+        margin-left: 15px
+    }
+
+    .assistant {
+        margin-right: 10px
+    }
+}

@@ -1,0 +1,52 @@
+@page "/"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@using SmartSupportAI.Services
+@inject SupportAgentService Agent
+@inject SupportStore Store
+@implements IDisposable
+<PageTitle>SmartSupport AI</PageTitle>
+<div class="workspace">
+<header class="masthead"><div><p class="eyebrow">CUSTOMER SUPPORT · C# TOOLS</p><h1>SmartSupport AI</h1><p>Ask about an order. See your application respond.</p></div><button class="secondary" @onclick="Reset" disabled="@busy">New conversation</button></header>
+@if (!Agent.IsConfigured) { <div class="notice">Setup required: set <code>AI:ApiKey</code> with User Secrets and restart. See the README. Your key stays on the server.</div> }
+<div class="columns"><section class="chat" aria-label="Support conversation">
+<div class="chat-heading"><h2>Your conversation</h2><span>Session memory</span></div>
+<div class="messages" role="log" aria-live="polite" aria-relevant="additions">
+@if (messages.Count == 0) {
+<div class="welcome"><h2>How can I help?</h2><p>Try one of these questions to begin.</p><button @onclick='() => SendPrompt("Where is order ORD-1003?")' disabled="@(!Agent.IsConfigured || busy)">Where is order ORD-1003?</button><button @onclick='() => SendPrompt("Can order ORD-1001 be cancelled?")' disabled="@(!Agent.IsConfigured || busy)">Can ORD-1001 be cancelled?</button></div>
+}
+@foreach (var message in messages) { <article class="message @(message.IsUser ? "user" : "assistant")"><strong>@(message.IsUser ? "YOU" : "SMARTSUPPORT")</strong><p>@message.Text</p></article> }
+@if (busy) { <p class="thinking" role="status">Checking with the agent…</p> }
+</div>
+@if (error is not null) { <p class="error" role="alert">@error</p> }
+<form class="composer" @onsubmit="Send" @onsubmit:preventDefault><label for="question">Your message</label><textarea id="question" @bind="input" @bind:event="oninput" maxlength="2000" rows="3" placeholder="Ask about ORD-1001, ORD-1002 or ORD-1003" disabled="@busy"></textarea><div class="composer-footer"><span>Demo data · Tickets stay in this browser circuit</span><button type="submit" disabled="@(busy || !Agent.IsConfigured || string.IsNullOrWhiteSpace(input))">@(busy ? "Working…" : "Send message")</button></div></form>
+</section><aside class="evidence">
+<section><p class="eyebrow">APPLICATION EXECUTION</p><h2>C# tool activity</h2><p class="muted">Actual method calls from the most recent request.</p>
+@if (Store.Activity.Count == 0) { <p class="empty">No tools called yet.</p> }
+@foreach (var call in Store.Activity) { <div class="tool-call"><code>@(call.Tool)()</code><span>@call.Detail</span></div> }
+</section><section><h2>Support tickets</h2>
+@if (Store.Tickets.Count == 0) { <p class="empty">No tickets created.</p> }
+@foreach (var ticket in Store.Tickets) { <article class="ticket"><strong>@ticket.TicketNumber</strong><span>@ticket.OrderNumber</span><p>@ticket.Issue</p></article> }
+</section><section class="boundary"><h3>Controlled capabilities</h3><p>Order lookup and cancellation eligibility are read only. Ticket creation uses local demo data.</p><p>A new conversation clears context. Existing demo tickets remain until this circuit ends.</p></section></aside></div></div>
+@code {
+private record DisplayMessage(bool IsUser, string Text);
+private readonly List<DisplayMessage> messages = [];
+private readonly CancellationTokenSource lifetime = new();
+private string input = "";
+private string? error;
+private bool busy;
+private async Task SendPrompt(string prompt) { input = prompt; await Send(); }
+private async Task Send() {
+if (busy || string.IsNullOrWhiteSpace(input)) return;
+var question = input.Trim(); input = ""; error = null; busy = true;
+messages.Add(new(true, question));
+try { messages.Add(new(false, await Agent.SendAsync(question, lifetime.Token))); }
+catch (OperationCanceledException) { error = "The request timed out. Context was cleared. Check tickets before trying again."; }
+catch (Exception ex) { 
+    //error = "The AI request failed. Check provider configuration, model access and quota. Context was cleared. Check tickets before retrying.";
+            error = ex.ToString();
+}
+finally { busy = false; }
+}
+private async Task Reset() { if (busy) return; await Agent.ResetAsync(); messages.Clear(); error = null; }
+public void Dispose() { lifetime.Cancel(); lifetime.Dispose(); }
+}
